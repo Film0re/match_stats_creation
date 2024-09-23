@@ -250,6 +250,8 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+
+console.log('AboutView.vue')
 import { supabase } from '../lib/supabaseClient.js'
 
 const getRoleName = (index) => {
