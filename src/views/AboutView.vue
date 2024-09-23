@@ -147,6 +147,7 @@
                 :id="`team-${teamIndex}-winner`"
                 :value="teamIndex"
                 v-model="winningTeam"
+                name="winner"
                 required
                 class="mr-2"
               />
@@ -422,7 +423,7 @@ const generateCSV = () => {
       player.id,
       matchId.value,
       team.id,
-      winningTeam.value === teamIndex ? team.id : '',
+      winningTeam.value !== null ? teams[winningTeam.value].id : '',
       player.kills,
       player.deaths,
       player.assists,
@@ -442,7 +443,7 @@ const generateCSV = () => {
   if (link.download !== undefined) {
     const url = URL.createObjectURL(blob)
     link.setAttribute('href', url)
-    link.setAttribute('download', 'match_data.csv')
+    link.setAttribute('download', `match-${matchId.value}.csv`)
     link.style.visibility = 'hidden'
     document.body.appendChild(link)
     link.click()
