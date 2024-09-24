@@ -10,7 +10,7 @@
             :key="teamIndex"
             class="bg-white shadow-md rounded-lg p-6"
           >
-            <h2 class="text-2xl font-semibold mb-4">Team {{ teamIndex + 1 }}</h2>
+            <h2 class="text-2xl font-semibold mb-4">{{ teamIndex === 0 ? 'Blue Team' : 'Red Team' }}</h2>
             <div class="mb-4">
               <label :for="`team-${teamIndex}-name`" class="block text-sm font-medium text-gray-700"
                 >Team Name</label
@@ -422,7 +422,8 @@ const generateCSV = () => {
     'match_length',
     'is_playoff',
     'season',
-    'week'
+    'week',
+    'team'
   ]
 
   const team_ids = teams.map((team) => team.id)
@@ -442,7 +443,8 @@ const generateCSV = () => {
       matchLength.value,
       isPlayoff.value,
       season.value,
-      week.value
+      week.value,
+      teamIndex === 0 ? 100 : 200
     ])
   )
 
@@ -505,6 +507,10 @@ const parseCSV = async (content) => {
         }
       }
 
+
+      // If the player is on blue team, give them a team value of 100
+      // If the player is on red team, give them a team value of 200
+
       const updatedTeamIndex = teams.findIndex((team) => team.id === playerData.team_id)
       if (updatedTeamIndex !== -1 && playerIndex !== -1) {
         teams[updatedTeamIndex].players[playerIndex] = {
@@ -513,7 +519,8 @@ const parseCSV = async (content) => {
           kills: parseInt(playerData.kills),
           deaths: parseInt(playerData.deaths),
           assists: parseInt(playerData.assists),
-          cs: parseInt(playerData.cs)
+          cs: parseInt(playerData.cs),
+          team: updatedTeamIndex === 0 ? 100 : 200
         }
       }
 
