@@ -20,7 +20,7 @@
                 v-model="team.id"
                 @change="loadPlayers(teamIndex)"
                 required
-                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               >
                 <option value="">Select a team</option>
                 <option
@@ -45,7 +45,7 @@
                     :id="`player-${teamIndex}-${playerIndex}-id`"
                     v-model="player.id"
                     required
-                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                   >
                     <option value="">Select a player</option>
                     <option
@@ -67,7 +67,7 @@
                     :id="`player-${teamIndex}-${playerIndex}-champion`"
                     v-model="player.championId"
                     required
-                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                   >
                     <option value="">Select a champion</option>
                     <option
@@ -91,7 +91,7 @@
                     v-model.number="player.kills"
                     required
                     min="0"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
                 <div>
@@ -106,7 +106,7 @@
                     v-model.number="player.deaths"
                     required
                     min="0"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="mt-1 block w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
                 <div>
@@ -121,7 +121,7 @@
                     v-model.number="player.assists"
                     required
                     min="0"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
                 <div>
@@ -136,7 +136,7 @@
                     v-model.number="player.cs"
                     required
                     min="0"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
               </div>
@@ -168,7 +168,7 @@
                 id="match-id"
                 v-model="matchId"
                 required
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="mt-1 block w-full border-gray-300 rounded-md border shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
             <div>
@@ -181,7 +181,7 @@
                 v-model.number="matchLength"
                 required
                 min="1"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
             <div>
@@ -192,7 +192,7 @@
                 id="is-playoff"
                 v-model="isPlayoff"
                 required
-                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               >
                 <option value="">Select an option</option>
                 <option :value="true">Yes</option>
@@ -208,20 +208,15 @@
                 required
                 min="7"
                 max="7"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
           </div>
         </div>
 
         <div class="flex justify-center space-x-4">
-          <button
-            type="submit"
-            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Generate CSV
-          </button>
-          <!-- <label
+          
+          <label
             for="file-upload"
             class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer"
           >
@@ -233,7 +228,13 @@
               class="hidden"
               accept=".csv"
             />
-          </label> -->
+          </label>
+          <button
+            type="submit"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Generate CSV
+          </button>
         </div>
       </form>
 
@@ -241,10 +242,6 @@
         {{ errorMessage }}
       </div>
 
-      <div v-if="csvContent" class="mt-8 bg-white shadow-md rounded-lg p-6">
-        <h2 class="text-2xl font-semibold mb-4">CSV Content</h2>
-        <pre class="whitespace-pre-wrap">{{ csvContent }}</pre>
-      </div>
     </div>
   </div>
 </template>
@@ -252,7 +249,6 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 
-console.log('AboutView.vue')
 import { supabase } from '../lib/supabaseClient.js'
 
 const getRoleName = (index) => {
@@ -271,7 +267,7 @@ const teams = reactive([
         kills: null,
         deaths: null,
         assists: null,
-        cs: null
+        cs: 0
       }))
   },
   {
@@ -284,7 +280,7 @@ const teams = reactive([
         kills: null,
         deaths: null,
         assists: null,
-        cs: null
+        cs: 0
       }))
   }
 ])
@@ -453,37 +449,51 @@ const generateCSV = () => {
   csvContent.value = csv
 }
 
-const handleFileUpload = (event) => {
-  const file = event.target.files[0]
-  const reader = new FileReader()
-
-  reader.onload = (e) => {
-    const content = e.target.result
-    csvContent.value = content
-    parseCSV(content)
-  }
-
-  reader.readAsText(file)
-}
-
-const parseCSV = (content) => {
+const parseCSV = async (content) => {
   const rows = content.split('\n').map((row) => row.split(','))
   const headers = rows.shift()
 
-  rows.forEach((row) => {
+  // Reset teams data
+  teams.forEach(team => {
+    team.id = ''
+    team.players.forEach(player => {
+      player.id = ''
+      player.championId = ''
+      player.kills = null
+      player.deaths = null
+      player.assists = null
+      player.cs = null
+    })
+  })
+
+  // Create a Set to store unique team IDs
+  const uniqueTeamIds = new Set()
+
+  for (const row of rows) {
     if (row.length === headers.length) {
       const playerData = {}
       headers.forEach((header, index) => {
         playerData[header] = row[index]
       })
 
+      uniqueTeamIds.add(playerData.team_id)
+
       const teamIndex = teams.findIndex((team) => team.id === playerData.team_id)
       const playerIndex = ['TOP', 'JUNGLE', 'MIDDLE', 'BOTTOM', 'UTILITY'].indexOf(
         playerData.individual_position
       )
 
-      if (teamIndex >= 0 && teamIndex < 2 && playerIndex >= 0) {
-        teams[teamIndex].players[playerIndex] = {
+      if (teamIndex === -1) {
+        // If team doesn't exist, add it
+        const newTeamIndex = teams.findIndex(team => team.id === '')
+        if (newTeamIndex !== -1) {
+          teams[newTeamIndex].id = playerData.team_id
+        }
+      }
+
+      const updatedTeamIndex = teams.findIndex((team) => team.id === playerData.team_id)
+      if (updatedTeamIndex !== -1 && playerIndex !== -1) {
+        teams[updatedTeamIndex].players[playerIndex] = {
           id: playerData.player_id,
           championId: playerData.champion_id,
           kills: parseInt(playerData.kills),
@@ -500,9 +510,68 @@ const parseCSV = (content) => {
       matchId.value = playerData.match_id
       matchLength.value = parseInt(playerData.match_length)
       isPlayoff.value = playerData.is_playoff.toLowerCase() === 'true'
-      season.value = playerData.season
+      season.value = parseInt(playerData.season)
     }
-  })
+  }
+
+  // Load team and player options
+  await loadTeamOptions(Array.from(uniqueTeamIds))
+  for (const team of teams) {
+    if (team.id) {
+      await loadPlayerOptions(team.id, teams.indexOf(team))
+    }
+  }
+}
+
+const loadTeamOptions = async (teamIds) => {
+  try {
+    const { data, error } = await supabase
+      .from('teams')
+      .select('team_id, name')
+      .in('team_id', teamIds)
+
+    if (error) throw error
+
+    teamOptions.value = data.map(team => ({
+      id: team.team_id,
+      name: team.name
+    }))
+  } catch (error) {
+    console.error('Error fetching teams:', error)
+    errorMessage.value = 'Failed to load teams. Please try again.'
+  }
+}
+
+const loadPlayerOptions = async (teamId, teamIndex) => {
+  try {
+    const { data, error } = await supabase
+      .from('team_players')
+      .select(`player_id, team_id, teams(team_id), players(player_id, name)`)
+      .eq('team_id', teamId)
+
+    if (error) throw error
+
+    playerOptions.value[teamIndex] = data.map(item => ({
+      id: item.players.player_id,
+      name: item.players.name
+    }))
+  } catch (error) {
+    console.error('Error fetching players:', error)
+    errorMessage.value = 'Failed to load players. Please try again.'
+  }
+}
+
+const handleFileUpload = (event) => {
+  const file = event.target.files[0]
+  const reader = new FileReader()
+
+  reader.onload = async (e) => {
+    const content = e.target.result
+    csvContent.value = content
+    await parseCSV(content)
+  }
+
+  reader.readAsText(file)
 }
 </script>
 
