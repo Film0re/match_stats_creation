@@ -425,12 +425,14 @@ const generateCSV = () => {
     'week'
   ]
 
+  const team_ids = teams.map((team) => team.id)
+
   const rows = teams.flatMap((team, teamIndex) =>
     team.players.map((player, playerIndex) => [
       player.id,
       matchId.value,
       team.id,
-      winningTeam.value !== null ? teams[winningTeam.value].id : '',
+      winningTeam.value === teamIndex ? team.id : teams.find((t) => t.id !== team.id).id,
       player.kills,
       player.deaths,
       player.assists,
