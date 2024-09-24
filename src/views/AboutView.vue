@@ -211,6 +211,18 @@
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
+            <div>
+              <label for="week" class="block text-sm font-medium text-gray-700">Week</label>
+              <input
+                type="number"
+                id="week"
+                v-model="week"
+                required
+                min="1"
+                max="9"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
           </div>
         </div>
 
@@ -290,6 +302,7 @@ const matchId = ref('')
 const matchLength = ref(null)
 const isPlayoff = ref(false)
 const season = ref(7)
+const week = ref(1)
 const csvContent = ref('')
 const errorMessage = ref('')
 
@@ -346,9 +359,6 @@ const fetchPlayers = async (teamId) => {
 const fetchChampions = async () => {
   // grab champions and their internal names from the db
   const { data, error } = await supabase.from('champions').select('internal_name, name')
-
-  console.log(data)
-  console.log(error)
 
   return data
     ? data.map((champion) => ({
@@ -411,7 +421,8 @@ const generateCSV = () => {
     'individual_position',
     'match_length',
     'is_playoff',
-    'season'
+    'season',
+    'week'
   ]
 
   const rows = teams.flatMap((team, teamIndex) =>
@@ -428,7 +439,8 @@ const generateCSV = () => {
       roleMap[playerIndex],
       matchLength.value,
       isPlayoff.value,
-      season.value
+      season.value,
+      week.value
     ])
   )
 
@@ -511,6 +523,7 @@ const parseCSV = async (content) => {
       matchLength.value = parseInt(playerData.match_length)
       isPlayoff.value = playerData.is_playoff.toLowerCase() === 'true'
       season.value = parseInt(playerData.season)
+      week.value = parseInt(playerData.week)
     }
   }
 
