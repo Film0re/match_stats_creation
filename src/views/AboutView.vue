@@ -124,7 +124,7 @@
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
-                <div>
+                <!-- <div>
                   <label
                     :for="`player-${teamIndex}-${playerIndex}-cs`"
                     class="block text-sm font-medium text-gray-700"
@@ -137,8 +137,8 @@
                     required
                     min="0"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
+                  /> -->
+                <!-- </div> -->
               </div>
             </div>
             <div class="mt-4">
