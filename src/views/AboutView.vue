@@ -10,7 +10,9 @@
             :key="teamIndex"
             class="bg-white shadow-md rounded-lg p-6"
           >
-            <h2 class="text-2xl font-semibold mb-4">{{ teamIndex === 0 ? 'Blue Team' : 'Red Team' }}</h2>
+            <h2 class="text-2xl font-semibold mb-4">
+              {{ teamIndex === 0 ? 'Blue Team' : 'Red Team' }}
+            </h2>
             <div class="mb-4">
               <label :for="`team-${teamIndex}-name`" class="block text-sm font-medium text-gray-700"
                 >Team Name</label
@@ -49,13 +51,26 @@
                   >
                     <option value="">Select a player</option>
                     <option
-                      v-for="playerOption in playerOptions[teamIndex]"
+                      v-for="playerOption in player.isSub
+                        ? allPlayerOptions
+                        : playerOptions[teamIndex]"
                       :key="playerOption.id"
                       :value="playerOption.id"
                     >
                       {{ playerOption.name }}
                     </option>
                   </select>
+                  <div class="col-span-2 mt-5">
+                    <label class="inline-flex items-center">
+                      <input
+                        type="checkbox"
+                        v-model="player.isSub"
+                        @change="handleSubChange(teamIndex, playerIndex)"
+                        class="form-checkbox h-5 w-5 text-indigo-600"
+                      />
+                      <span class="ml-2 text-sm text-gray-700">Sub</span>
+                    </label>
+                  </div>
                 </div>
                 <div>
                   <label
@@ -124,21 +139,6 @@
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
-                <!-- <div>
-                  <label
-                    :for="`player-${teamIndex}-${playerIndex}-cs`"
-                    class="block text-sm font-medium text-gray-700"
-                    >CS</label
-                  >
-                  <input
-                    type="number"
-                    :id="`player-${teamIndex}-${playerIndex}-cs`"
-                    v-model.number="player.cs"
-                    required
-                    min="0"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  /> -->
-                <!-- </div> -->
               </div>
             </div>
             <div class="mt-4">
@@ -227,7 +227,6 @@
         </div>
 
         <div class="flex justify-center space-x-4">
-          
           <label
             for="file-upload"
             class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer"
@@ -253,14 +252,12 @@
       <div v-if="errorMessage" class="mt-4 text-red-600 text-center">
         {{ errorMessage }}
       </div>
-
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-
 import { supabase } from '../lib/supabaseClient.js'
 
 const getRoleName = (index) => {
@@ -279,7 +276,8 @@ const teams = reactive([
         kills: null,
         deaths: null,
         assists: null,
-        cs: 0
+        cs: 0,
+        isSub: false
       }))
   },
   {
@@ -292,7 +290,8 @@ const teams = reactive([
         kills: null,
         deaths: null,
         assists: null,
-        cs: 0
+        cs: 0,
+        isSub: false
       }))
   }
 ])
@@ -302,12 +301,13 @@ const matchId = ref('')
 const matchLength = ref(null)
 const isPlayoff = ref(false)
 const season = ref(7)
-const week = ref(1)
+const week = ref(0)
 const csvContent = ref('')
 const errorMessage = ref('')
 
 const teamOptions = ref([])
 const playerOptions = ref([[], []])
+const allPlayerOptions = ref([])
 const championOptions = ref([])
 
 const roleMap = {
@@ -318,11 +318,7 @@ const roleMap = {
   4: 'UTILITY'
 }
 
-// Simulated API calls
 const fetchTeams = async () => {
-  // Simulated delay
-  await new Promise((resolve) => setTimeout(resolve, 500))
-
   const { data, error } = await supabase
     .from('teams')
     .select('team_id, name')
@@ -337,17 +333,12 @@ const fetchTeams = async () => {
 }
 
 const fetchPlayers = async (teamId) => {
-  // fetch players from supabase for the given team
-
-  // Join the players table with the team_players table
-  // Match on the player_id column
   const { data, error } = await supabase
     .from('team_players')
     .select(`player_id, team_id, teams(team_id), players(player_id, name)`)
     .eq('team_id', teamId)
 
   const players = data.map((player) => player.players)
-  // Return the given teams players
   return data
     ? players.map((player) => ({
         id: player.player_id,
@@ -357,7 +348,6 @@ const fetchPlayers = async (teamId) => {
 }
 
 const fetchChampions = async () => {
-  // grab champions and their internal names from the db
   const { data, error } = await supabase.from('champions').select('internal_name, name')
 
   return data
@@ -391,6 +381,22 @@ const loadPlayers = async (teamIndex) => {
   }
 }
 
+const loadAllPlayers = async () => {
+  try {
+    const { data, error } = await supabase.from('players').select('player_id, name')
+
+    if (error) throw error
+
+    allPlayerOptions.value = data.map((player) => ({
+      id: player.player_id,
+      name: player.name
+    }))
+  } catch (error) {
+    console.error('Error fetching all players:', error)
+    errorMessage.value = 'Failed to load all players. Please try again.'
+  }
+}
+
 const loadChampions = async () => {
   try {
     championOptions.value = await fetchChampions()
@@ -403,7 +409,15 @@ const loadChampions = async () => {
 onMounted(async () => {
   await loadTeams()
   await loadChampions()
+  await loadAllPlayers()
 })
+
+const handleSubChange = (teamIndex, playerIndex) => {
+  const player = teams[teamIndex].players[playerIndex]
+  if (player.isSub) {
+    player.id = '' // Reset player selection when sub is checked
+  }
+}
 
 const generateCSV = () => {
   errorMessage.value = ''
@@ -425,8 +439,6 @@ const generateCSV = () => {
     'week',
     'team'
   ]
-
-  const team_ids = teams.map((team) => team.id)
 
   const rows = teams.flatMap((team, teamIndex) =>
     team.players.map((player, playerIndex) => [
@@ -469,20 +481,19 @@ const parseCSV = async (content) => {
   const rows = content.split('\n').map((row) => row.split(','))
   const headers = rows.shift()
 
-  // Reset teams data
-  teams.forEach(team => {
+  teams.forEach((team) => {
     team.id = ''
-    team.players.forEach(player => {
+    team.players.forEach((player) => {
       player.id = ''
       player.championId = ''
       player.kills = null
       player.deaths = null
       player.assists = null
       player.cs = null
+      player.isSub = false
     })
   })
 
-  // Create a Set to store unique team IDs
   const uniqueTeamIds = new Set()
 
   for (const row of rows) {
@@ -500,16 +511,11 @@ const parseCSV = async (content) => {
       )
 
       if (teamIndex === -1) {
-        // If team doesn't exist, add it
-        const newTeamIndex = teams.findIndex(team => team.id === '')
+        const newTeamIndex = teams.findIndex((team) => team.id === '')
         if (newTeamIndex !== -1) {
           teams[newTeamIndex].id = playerData.team_id
         }
       }
-
-
-      // If the player is on blue team, give them a team value of 100
-      // If the player is on red team, give them a team value of 200
 
       const updatedTeamIndex = teams.findIndex((team) => team.id === playerData.team_id)
       if (updatedTeamIndex !== -1 && playerIndex !== -1) {
@@ -520,7 +526,8 @@ const parseCSV = async (content) => {
           deaths: parseInt(playerData.deaths),
           assists: parseInt(playerData.assists),
           cs: parseInt(playerData.cs),
-          team: updatedTeamIndex === 0 ? 100 : 200
+          team: updatedTeamIndex === 0 ? 100 : 200,
+          isSub: false // Set isSub to false when importing CSV
         }
       }
 
@@ -536,7 +543,6 @@ const parseCSV = async (content) => {
     }
   }
 
-  // Load team and player options
   await loadTeamOptions(Array.from(uniqueTeamIds))
   for (const team of teams) {
     if (team.id) {
@@ -554,7 +560,7 @@ const loadTeamOptions = async (teamIds) => {
 
     if (error) throw error
 
-    teamOptions.value = data.map(team => ({
+    teamOptions.value = data.map((team) => ({
       id: team.team_id,
       name: team.name
     }))
@@ -573,7 +579,7 @@ const loadPlayerOptions = async (teamId, teamIndex) => {
 
     if (error) throw error
 
-    playerOptions.value[teamIndex] = data.map(item => ({
+    playerOptions.value[teamIndex] = data.map((item) => ({
       id: item.players.player_id,
       name: item.players.name
     }))
