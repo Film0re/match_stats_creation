@@ -257,7 +257,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { supabase } from '../lib/supabaseClient.js'
 
 const getRoleName = (index) => {
@@ -297,7 +297,6 @@ const teams = reactive([
 ])
 
 const winningTeam = ref(null)
-const matchId = ref('')
 const matchLength = ref(null)
 const isPlayoff = ref(false)
 const season = ref(7)
@@ -309,6 +308,17 @@ const teamOptions = ref([])
 const playerOptions = ref([[], []])
 const allPlayerOptions = ref([])
 const championOptions = ref([])
+
+// Match id should be team1name vs team2name _ reg if not playoff then week #
+const matchId = computed(() => {
+  if (teams[0].id && teams[1].id) {
+    const team1 = teamOptions.value.find((team) => team.id === teams[0].id)
+    const team2 = teamOptions.value.find((team) => team.id === teams[1].id)
+    const formatString = (str) => str.toLowerCase().replace(/\s+/g, '_')
+    return `${formatString(team1.name)}_vs_${formatString(team2.name)}_${isPlayoff.value ? 'playoff' : `week_${week.value}`}`
+  }
+  return ''
+})
 
 const roleMap = {
   0: 'TOP',
