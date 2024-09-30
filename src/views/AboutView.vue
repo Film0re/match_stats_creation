@@ -383,8 +383,11 @@ const loadPlayers = async (teamIndex) => {
 
 const loadAllPlayers = async () => {
   try {
-    const { data, error } = await supabase.from('players').select('player_id, name')
-
+    const { data, error } = await supabase
+      .from('players')
+      .select('player_id, name')
+      .order('name', { ascending: true }) // Alphabetical sort
+      .order('created_at', { ascending: false }) // Then by created_at descending
     if (error) throw error
 
     allPlayerOptions.value = data.map((player) => ({
